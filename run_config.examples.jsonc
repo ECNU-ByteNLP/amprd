@@ -1,0 +1,51 @@
+// 运行示例集合（JSONC：支持注释；如需严格 JSON，请去掉注释后另存）
+
+// 示例1：自然语言 Brief + 预置模板（推荐入门）
+{
+  "brief_text": "我们要做一个面向中小商家的对账平台，目标是将对账周期缩短至 T+1，并降低差错率；首期聚焦电商和支付两类渠道，支持自动比对与差异项复核；需要导出标准报表并满足基础合规要求。",
+  "template_id": "figma",
+  "output": "artifacts",
+  "verbose": true
+}
+
+// 运行：python scripts/run_prd.py --config run_config.examples.jsonc
+//（脚本会按 JSON 解析器忽略注释的兼容性不同；若报错，请复制对应示例片段到单独 JSON 文件运行）
+
+/* --------------------------------------------------------- */
+
+// 示例2：结构化 Brief 文件 + 自定义模板 Markdown
+{
+  "brief": "examples/brief_sample.json",
+  "template_path": "templates/figma_prd.md",
+  "output": "artifacts",
+  "verbose": true
+}
+
+/* --------------------------------------------------------- */
+
+// 示例3：仅使用结构化 Brief（不套模板）
+{
+  "brief": "examples/brief_sample.json",
+  "output": "artifacts"
+}
+
+/* --------------------------------------------------------- */
+
+// 示例4：自然语言 Brief（静默运行，关闭 verbose）
+{
+  "brief_text": "我们要上线一个会员积分体系，提供积分获取与兑换，强调风控与黑名单。",
+  "output": "artifacts",
+  "verbose": false
+}
+
+/* --------------------------------------------------------- */
+
+// 示例5：指定自定义输出目录
+{
+  "brief": "examples/brief_sample.json",
+  "template_id": "jira",
+  "output": "artifacts/run_jira_01",
+  "verbose": true
+}
+
+

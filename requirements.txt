@@ -1,0 +1,11 @@
+beautifulsoup4>=4.12.0
+requests>=2.31.0
+jsonschema>=4.21.0
+numpy>=1.26.0
+sentence-transformers>=2.7.0
+scipy>=1.11.0
+python-dotenv>=1.0.0
+python-docx>=0.8.11
+dashscope>=1.14.0
+PyYAML>=6.0.0
+

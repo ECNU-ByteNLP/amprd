@@ -1,0 +1,20 @@
+{
+  "domain": "financial",
+  "goal": "推出智能理财助手，提高新客转化率",
+  "target_users": [
+    {"persona": "年轻白领", "needs": "快速了解理财方案"},
+    {"persona": "初级投资者", "needs": "风险可控的组合建议"}
+  ],
+  "key_constraints": [
+    {"type": "compliance", "description": "符合金融监管披露要求", "priority": "P0"},
+    {"type": "latency", "description": "用户查询响应不超过2秒", "priority": "P1"}
+  ],
+  "business_metrics": [
+    {"name": "新客开户率", "target": "15%", "timeframe": "Q3"},
+    {"name": "理财产品转化率", "target": "12%", "timeframe": "半年"}
+  ],
+  "references": [
+    {"type": "competitor", "description": "示例银行智能顾问", "link": "https://example.com"}
+  ]
+}
+

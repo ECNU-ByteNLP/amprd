@@ -1,0 +1,30 @@
+templates:
+  - id: aakash
+    name: "Aakash Gupta PRD Template"
+    path: "aakash_prd.md"
+    fields: ["productName", "productDescription", "targetAudience", "coreFeatures", "constraints"]
+    source: "https://pmprompt.com/blog/prd-templates#aakash"
+
+  - id: asana
+    name: "Asana Spec Template"
+    path: "asana_spec.md"
+    fields: ["productName", "productDescription", "coreFeatures", "constraints"]
+    source: "https://pmprompt.com/blog/prd-templates#asana"
+
+  - id: figma
+    name: "Figma PRD Template"
+    path: "figma_prd.md"
+    fields: ["productName", "productDescription", "targetAudience", "coreFeatures"]
+    source: "https://pmprompt.com/blog/prd-templates#figma"
+
+  - id: jira
+    name: "Jira PRD Template"
+    path: "jira_prd.md"
+    fields: ["productName", "userStories", "acceptanceCriteria"]
+    source: "https://pmprompt.com/blog/prd-templates#jira"
+
+  - id: producthunt
+    name: "Product Hunt PRD Template"
+    path: "producthunt_prd.md"
+    fields: ["productName", "coreFeatures", "constraints"]
+    source: "https://pmprompt.com/blog/prd-templates#producthunt"
