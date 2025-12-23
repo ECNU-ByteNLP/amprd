@@ -1,0 +1,63 @@
+\documentclass[11pt]{article}
+
+% In Overleaf ACL template:
+% - review: anonymous + line numbers
+% - final: camera-ready
+% - preprint: non-anonymous with page numbers (depending on template version)
+\usepackage[review]{acl}
+
+\usepackage{times}
+\usepackage{latexsym}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{microtype}
+\usepackage{inconsolata}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{amsmath}
+\usepackage{url}
+
+\title{PRDWeaver: Multi-Agent Product Requirements Document Generation with Ablations and Strong-Prompt Baselines}
+
+% For anonymous review, use:
+% \author{Anonymous ACL submission}
+\author{
+  First Author \\
+  Affiliation \\
+  \texttt{email@domain} \\\And
+  Second Author \\
+  Affiliation \\
+  \texttt{email@domain}
+}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Product Requirements Documents (PRDs) are high-stakes artifacts that bridge user needs, business goals, and implementable technical plans.
+We study PRD generation from structured briefs using a modular multi-agent pipeline (\textsc{PRDWeaver}).
+We evaluate on a 15-brief benchmark with controlled ablations (e.g., removing alignment, vision, tables, or consistency agents) and compare against several baselines including a strong single-model prompt.
+On deliverability-oriented metrics (problem--solution separation and user-journey grounding), the full system significantly outperforms the strong-prompt baseline under Holm--Bonferroni correction, while a targeted ablation (\texttt{no\_table}) predictably eliminates tables.
+We release the pipeline, evaluation suite, and analysis scripts to support reproducible study of document-quality generation systems.
+\end{abstract}
+
+\input{sections/introduction}
+\input{sections/task}
+\input{sections/system}
+\input{sections/metrics}
+\input{sections/experiments}
+\input{sections/results}
+\input{sections/limitations}
+\input{sections/ethics}
+\input{sections/conclusion}
+
+\bibliographystyle{acl_natbib}
+\bibliography{custom}
+
+\appendix
+\input{sections/appendix}
+
+\end{document}
+
+

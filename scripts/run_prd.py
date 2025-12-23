@@ -41,9 +41,16 @@ def run_with_config(cfg: Dict[str, Any]) -> Path:
     # Build inputs
     inputs: Dict[str, Any] = {}
     if cfg.get("brief_text"):
-        brief_json, parse_report = parse_brief_text(cfg["brief_text"])
+        # Try to use LLM for parsing if available
+        from src.models.qwen_client import create_qwen_clients_from_env
+        text_cn, _, _ = create_qwen_clients_from_env()
+        brief_json, parse_report = parse_brief_text(cfg["brief_text"], model=text_cn)
         inputs.update({"brief": brief_json, "brief_raw": cfg["brief_text"], "brief_parse_report": parse_report})
-        logging.getLogger("Runner").info("brief_text 模式；解析置信度=%.2f", parse_report.get("confidence", 0.0))
+        logging.getLogger("Runner").info(
+            "brief_text 模式；解析置信度=%.2f (method=%s)",
+            parse_report.get("confidence", 0.0),
+            parse_report.get("extraction_method", "unknown"),
+        )
     elif cfg.get("brief"):
         brief_path = Path(cfg["brief"]).resolve()
         data = json.loads(brief_path.read_text(encoding="utf-8"))

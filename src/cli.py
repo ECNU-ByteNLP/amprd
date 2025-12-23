@@ -26,6 +26,26 @@ def main() -> None:
     parser.add_argument("--template-path", type=Path, default=None, help="Custom template markdown path.")
     parser.add_argument("--output", type=Path, default=Path("artifacts"), help="Output directory.")
     parser.add_argument(
+        "--model-provider",
+        type=str,
+        default="qwen",
+        choices=["qwen", "openai"],
+        help="Model provider. 'openai' also works for OpenAI-compatible providers via OPENAI_BASE_URL.",
+    )
+    parser.add_argument(
+        "--communication-mode",
+        type=str,
+        default="blackboard",
+        choices=["blackboard", "async_queue"],
+        help="Pipeline communication mode (use async_queue to emulate async scheduling).",
+    )
+    parser.add_argument(
+        "--disable-agent",
+        action="append",
+        default=[],
+        help="Disable an agent by name for ablations (repeatable), e.g., --disable-agent TableAgent",
+    )
+    parser.add_argument(
         "--verbose",
         action="store_true",
         help="Print detailed logs (已加载的模型、输出路径等信息)。",
@@ -40,10 +60,16 @@ def main() -> None:
     if args.brief_text:
         # Lazy import to keep CLI lightweight when not needed
         from src.utils.brief_parser import parse_brief_text
-        brief_json, parse_report = parse_brief_text(args.brief_text)
+        from src.models.qwen_client import create_qwen_clients_from_env
+        text_cn, _, _ = create_qwen_clients_from_env()
+        brief_json, parse_report = parse_brief_text(args.brief_text, model=text_cn)
         inputs_payload = {"brief": brief_json, "brief_raw": args.brief_text, "brief_parse_report": parse_report}
         if args.verbose:
-            logging.getLogger("CLI").info("使用 brief-text 模式；解析置信度=%.2f", parse_report.get("confidence", 0.0))
+            logging.getLogger("CLI").info(
+                "使用 brief-text 模式；解析置信度=%.2f (method=%s)",
+                parse_report.get("confidence", 0.0),
+                parse_report.get("extraction_method", "unknown"),
+            )
     else:
         inputs_payload = {"brief": load_json(args.brief)}
         if args.verbose:
@@ -63,7 +89,12 @@ def main() -> None:
                 template_spec.get("path"),
             )
 
-    orchestrator = MultiAgentOrchestrator(persist_dir=args.output)
+    orchestrator = MultiAgentOrchestrator(
+        persist_dir=args.output,
+        model_provider=args.model_provider,
+        communication_mode=args.communication_mode,
+        disabled_agents=args.disable_agent,
+    )
     if args.verbose:
         try:
             text_cn = orchestrator.agents["TextGen_CN"]._model.name  # type: ignore[attr-defined]

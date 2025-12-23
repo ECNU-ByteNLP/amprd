@@ -1,0 +1,26 @@
+% Experiments
+\section{Experiments}
+\label{sec:experiments}
+
+\paragraph{Systems compared.}
+We evaluate:
+\textsc{PRDWeaver} (full system),
+ablation variants that disable a single component (e.g., \texttt{no\_alignment}, \texttt{no\_vision}, \texttt{no\_table}, \texttt{no\_consistency}),
+and baselines including a strong single-model prompting baseline (\textsc{StrongPrompt}).
+
+\paragraph{Ablations.}
+Each ablation removes one agent while preserving pipeline execution via a no-op placeholder.
+This design ensures all variants produce schema-conformant PRDs and metrics are computed on the same fields.
+
+\paragraph{Evaluation protocol.}
+For each system configuration, we generate a PRD for each of the 15 briefs and compute the full metric suite.
+All tests are paired (brief-wise) between the full system and each comparison system.
+
+\paragraph{Reproducibility and artifacts.}
+We provide a command-line interface and a Web API to reproduce generations and compute metrics on arbitrary PRDs.
+The Web API supports controlled configurations (e.g., disabling specific agents and selecting a model provider), enabling standardized evaluation without manual annotation.
+
+\paragraph{Reporting.}
+We report mean scores, the mean difference \(\Delta\) (Full minus comparison), Wilcoxon \(p\)-values, Holm--Bonferroni corrected \(q\)-values, and Cliff's delta.
+
+

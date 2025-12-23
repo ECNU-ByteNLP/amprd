@@ -1,0 +1,13 @@
+% Limitations
+\section*{Limitations}
+
+Our evaluation relies heavily on automated metrics, some of which are structural and may saturate when systems reliably emit required sections.
+While we mitigate this by emphasizing comparisons against a strong prompting baseline, semantic quality proxies remain imperfect and do not fully replace human expert judgment.
+Additionally, results are reported on a 15-brief benchmark; broader coverage and multi-run stability analyses would further strengthen conclusions.
+
+\paragraph{Why some gains look ``large''.}
+Several headline improvements (e.g., problem--solution separation and user-journey grounding) are measured as rubric-style compliance scores.
+When a baseline frequently omits these artifacts, the metric can change sharply once a system reliably produces them.
+We therefore prioritize comparisons against \textsc{StrongPrompt} and report multiple-comparison corrected significance to avoid overstating improvements.
+
+

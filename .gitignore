@@ -50,3 +50,17 @@ Thumbs.db
 # Logs
 *.log
 
+# Generated results and outputs
+results/
+assets/output/
+reports/
+
+# Data files (too large for git)
+data/benchmark/
+data/expert_prds/
+data/chinese_prds/
+
+# Keep paper assets (figures, tables)
+!paper/figures/
+!paper/tables/
+

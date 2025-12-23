@@ -1,0 +1,21 @@
+% Metrics
+\section{Automatic Metrics}
+\label{sec:metrics}
+
+We report a set of automated metrics that capture PRD structure and quality dimensions.
+Some metrics are binary/structural (e.g., presence of required sections, tables), while others approximate semantic quality (e.g., problem clarity, requirement executability, terminology consistency) via rubric-based checks.
+
+\paragraph{Key dimensions.}
+We focus on:
+(\textbf{i}) overall completeness and multimodality compliance,
+(\textbf{ii}) table presence/quality (\(S_{\mathrm{tab}}\)),
+(\textbf{iii}) bilingual compliance (\(S_{\mathrm{bi}}\)),
+(\textbf{iv}) semantic quality (\(S_{\mathrm{sem}}\)),
+and deliverability-oriented metrics for problem--solution separation (\(S_{\mathrm{ps}}\)), user-journey grounding (\(S_{\mathrm{uj}}\)), and hypothesis framing (\(S_{\mathrm{hyp}}\)).
+
+\paragraph{Statistical testing.}
+All comparisons use paired samples across the same 15 briefs.
+We apply the Wilcoxon signed-rank test \citep{wilcoxon1945} and report effect sizes using Cliff's delta \citep{cliff1993dominance}.
+To control family-wise error across multiple metrics, we apply Holm--Bonferroni correction \citep{holm1979} and report corrected \(q\)-values.
+
+

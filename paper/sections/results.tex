@@ -1,0 +1,56 @@
+% Results
+\section{Results}
+\label{sec:results}
+
+We summarize quantitative comparisons and highlight representative qualitative cases.
+Figures referenced below are produced by our analysis scripts and included under \texttt{paper/figures/}.
+
+\subsection{Ablation Study}
+\label{sec:ablation}
+
+Table~\ref{tab:ablation-summary} summarizes key ablations.
+As expected, removing the table agent (\texttt{no\_table}) eliminates tables (\(S_{\mathrm{tab}}\) drops from 1.0 to 0.0; corrected \(q<0.01\)), validating that our ablation controls are functioning and that the table component causally affects tabular structure.
+Other ablations show comparatively small changes on most metrics, suggesting the full system's structural completeness is robust for this benchmark.
+
+% Auto-generated table (small subset)
+\input{tables/ablation_summary}
+
+\subsection{Full System vs. StrongPrompt Baseline}
+\label{sec:baseline}
+
+Table~\ref{tab:full-vs-strong} compares the full system with \textsc{StrongPrompt}.
+The full system achieves statistically significant gains (Holm--Bonferroni corrected) on deliverability-oriented metrics:
+\(S_{\mathrm{ps}}\) (\(\Delta=+0.6811\), \(q=0.0060\)),
+\(S_{\mathrm{uj}}\) (\(\Delta=+0.6389\), \(q=0.0066\)),
+and \(S_{\mathrm{hyp}}\) (\(\Delta=+0.6000\), \(q=0.0066\)).
+For semantic quality \(S_{\mathrm{sem}}\), the full system improves the mean (\(\Delta=+0.1083\)) but is not significant after correction (\(q=0.0639\)).
+We observe a trade-off on bilingual compliance \(S_{\mathrm{bi}}\): \textsc{StrongPrompt} scores higher (\(\Delta=-0.0672\), \(q=0.0013\)), indicating that stricter bilingual prompting can improve bilingual formatting consistency.
+
+\input{tables/full_vs_strong_prompt}
+
+\subsection{Qualitative Case Study (Three-way)}
+\label{sec:case}
+
+We include a three-way case study (full system vs. \texttt{no\_table} vs. \textsc{StrongPrompt}) on representative briefs.
+Across cases, the full system tends to produce clearer separation between problem statements and solution design, and more complete user-journey artifacts, while \textsc{StrongPrompt} often yields shorter sections and weaker journey grounding despite matching structural checklists.
+Removing tables predictably harms tabular summaries while keeping most narrative sections intact.
+
+\paragraph{Figures.}
+We provide plots for aggregate comparisons:
+Figure~\ref{fig:full-strong} (Full vs. StrongPrompt) and Figure~\ref{fig:ablation-heatmap} (ablation heatmap).
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\columnwidth]{figures/full_vs_strong_prompt_comparison.png}
+  \caption{Full system vs. StrongPrompt baseline across metrics (means over 15 briefs).}
+  \label{fig:full-strong}
+\end{figure}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\columnwidth]{figures/ablation_heatmap.png}
+  \caption{Ablation heatmap: mean metric values per configuration (15 briefs).}
+  \label{fig:ablation-heatmap}
+\end{figure}
+
+

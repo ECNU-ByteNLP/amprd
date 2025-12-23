@@ -1,0 +1,22 @@
+% Introduction
+\section{Introduction}
+\label{sec:intro}
+
+Product Requirements Documents (PRDs) are high-stakes planning artifacts that connect user needs, business objectives, and implementable technical requirements.
+In practice, teams rely on PRDs to align stakeholders, define scope, and reduce downstream rework; however, producing high-quality PRDs is time-consuming and error-prone.
+Recent large language models (LLMs) can draft long-form documents, but maintaining \emph{executability} (clear requirements), \emph{grounded user reasoning} (personas and journeys), and \emph{consistent structure} remains challenging for single-pass generation.
+
+We study PRD generation from structured product briefs using a modular multi-agent pipeline, \textsc{PRDWeaver}.
+Rather than relying on a single monolithic prompt, \textsc{PRDWeaver} composes specialized agents (e.g., alignment, table, and consistency agents) orchestrated by a pipeline controller, and an assembler that produces a schema-conformant PRD.
+This modularity enables controlled ablations that test which components contribute to document quality.
+
+We evaluate on a benchmark of 15 diverse briefs and compare against multiple baselines, including a strong single-model prompt (\textsc{StrongPrompt}) designed to explicitly request key PRD sections.
+Our analysis uses paired nonparametric tests (Wilcoxon signed-rank) with Holm--Bonferroni correction and effect sizes (Cliff's delta).
+
+\paragraph{Contributions.}
+We contribute:
+(i) a modular multi-agent PRD generation pipeline with an \emph{ablation-safe} design (no-op agents preserve message flow so all variants remain comparable),
+(ii) a reproducible benchmark and automated PRD quality evaluation suite with multiple-comparison corrected statistics,
+and (iii) a practical artifact package: a Web API and an optional MCP tool interface for generation and metric-based evaluation.
+
+

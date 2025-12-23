@@ -12,7 +12,7 @@
 - 🎨 **多模态内容生成**：自动生成流程图、界面示意图、KPI 表格、里程碑计划等
 - 📊 **结构化输出**：符合 `schemas/prd_schema_v0_9.json` 的结构化 JSON，支持导出为 Markdown/DOCX
 - 🔄 **可复现实验管线**：所有状态写入统一黑板，支持完整追溯与审计
-- 🔌 **纯开源模型支持**：默认使用 Mock 客户端，可替换为 Qwen/Doubao 等开源模型
+- 🔌 **Qwen模型集成**：默认使用 Qwen 系列模型（qwen2.5-32b-instruct），支持文本和视觉生成；Mock模式仅用于测试
 
 ## 🚀 快速开始
 
@@ -31,9 +31,11 @@ cd amprd
 # 安装依赖
 pip install -r requirements.txt
 
-# 配置环境变量（可选，用于真实模型）
+# 配置Qwen API密钥（推荐，系统会自动使用Qwen模型）
+export QWEN_API_KEY="your-api-key"
+# 或使用 .env 文件
 cp env.example .env
-# 编辑 .env 文件，填入你的 API Key
+# 编辑 .env 文件，填入你的 QWEN_API_KEY
 ```
 
 ### 使用方式
@@ -70,7 +72,7 @@ python scripts/run_prd.py --config run_config.json
 ```
 
 2. 运行 CLI：
-```bash
+   ```bash
 python -m src.cli --brief examples/brief_sample.json --output artifacts --verbose
 ```
 
@@ -78,12 +80,12 @@ python -m src.cli --brief examples/brief_sample.json --output artifacts --verbos
 
 生成完成后，导出为可读文档：
 
-```bash
+   ```bash
 # 导出中文 DOCX
-python -m src.cli_export --input artifacts/<prd>.json --output exports/<prd>_zh.docx --format docx --language zh
+   python -m src.cli_export --input artifacts/<prd>.json --output exports/<prd>_zh.docx --format docx --language zh
 
 # 导出英文 DOCX
-python -m src.cli_export --input artifacts/<prd>.json --output exports/<prd>_en.docx --format docx --language en
+   python -m src.cli_export --input artifacts/<prd>.json --output exports/<prd>_en.docx --format docx --language en
 
 # 导出 Markdown
 python -m src.cli_export --input artifacts/<prd>.json --output exports/<prd>.md --format markdown --language auto
@@ -190,9 +192,38 @@ QWEN_VISION_SIZE=1328x1328
 - `jira` - Jira PRD 模板
 - 更多模板见 `templates/` 目录
 
+### 运行实验
+
+**方式1：快速开始**（推荐首次使用）：
+
+```bash
+# 一键运行快速实验（创建数据集 + 生成PRD + 计算指标 + 生成报告）
+python scripts/quick_start_experiment.py
+
+# 或者单独创建基准数据集（15个样例，覆盖14种PRD模板风格）
+python scripts/create_benchmark.py
+```
+
+**方式2：完整实验流程**（包含消融实验）：
+
+```bash
+# 一键运行完整实验流程
+python scripts/run_benchmark_experiment.py \
+    --benchmark-dir data/benchmark \
+    --output-dir results \
+    --create-samples \
+    --run-full-system \
+    --run-ablation \
+    --generate-report
+```
+
+**详细实验步骤**：请参考 [实验步骤指南](docs/experiment_steps.md) - **从环境准备到结果分析的完整流程**
+
 ## 📊 质量指标
 
-系统自动计算以下质量指标：
+### 基础指标（5个）
+
+系统自动计算以下基础质量指标：
 
 - **S_comp** - 结构完整度
 - **S_mm** - 跨模态一致性（图/表/文本锚点）
@@ -200,7 +231,22 @@ QWEN_VISION_SIZE=1328x1328
 - **S_bi** - 双语一致性
 - **S_var** - 稳定性（多次运行方差）
 
-指标详情见 `src/metrics/quality.py`
+### 扩展指标（8个，符合顶刊实验标准）
+
+基于 [pmprompt.com PRD Templates](https://pmprompt.com/blog/prd-templates) 的14种顶级PRD模板最佳实践：
+
+- **S_sem** - 语义质量（问题陈述清晰度、需求可执行性、术语一致性）
+- **S_biz** - 业务对齐度（目标与指标一致性、用户需求覆盖度）
+- **S_tech** - 技术可行性（技术要求的合理性、约束完整性）
+- **S_risk** - 风险识别（风险识别完整性、缓解策略有效性）
+- **S_expert** - 专家对齐度（与人类专家PRD的结构/内容相似度）
+- **S_ps** - 问题-解决方案分离度 ✨ 新增（问题空间和解决方案空间清晰分离）
+- **S_uj** - 用户旅程完整性 ✨ 新增（用户画像、旅程地图、接触点覆盖）
+- **S_hyp** - 假设验证度 ✨ 新增（假设陈述、验证方法、成功标准）
+
+指标实现：`src/metrics/quality.py`（基础）、`src/metrics/extended_quality.py`（扩展）
+
+**创新点**：首次在多智能体PRD生成系统中实现问题-解决方案空间分离，参考顶级产品团队（Intercom, Airbnb, Asana, Miro, Basecamp）的最佳实践。
 
 ## 🤝 贡献指南
 
@@ -218,10 +264,25 @@ QWEN_VISION_SIZE=1328x1328
 
 ## 📚 相关文档
 
+### 📋 项目总结（推荐先读）
+- **[项目总体总结](docs/project_summary.md)** - **✨ 核心功能、支持能力、优化方向的完整总结**
+
+### 系统文档
 - [系统详细讲解与图解](docs/system_guide.md)
 - [系统总览](docs/system_overview.md)
 - [多智能体架构](docs/multi_agent_architecture.md)
+- [Agent 设计说明](docs/agent_design.md) - **详细说明各 Agent 的设计思路与协作机制**
 - [Schema 说明](docs/schema_overview.md)
+
+### 实验文档
+- [顶刊实验标准优化方案 v2.0](docs/top_tier_optimization_v2.md) - **✨ 最新：基于14种PRD模板的最佳实践优化**
+- [顶刊实验标准优化方案 v1.0](docs/top_tier_optimization.md) - 初始优化方案
+- [实验实施指南](docs/experiment_guide.md) - **如何使用扩展指标、基准数据集、消融实验**
+- [实验步骤详解](docs/experiment_steps.md) - **手把手教你如何运行实验、分析结果**
+- [实验分析报告](docs/experiment_analysis.md) - **实验运行问题诊断与修复**
+- [优化总结](docs/optimization_summary.md) - **已完成优化工作的总结**
+- [自动实验与显著性检验](docs/auto_experiments.md)
+- [人工评测方案](docs/human_eval.md)
 
 ## 🙏 致谢
 

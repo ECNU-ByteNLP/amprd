@@ -24,7 +24,14 @@ class VisionAgent(Agent):
         artifacts = {}
         state_snapshot = blackboard.get_state()
         sections_state = state_snapshot.get("sections", {})
-        personas = plan.get("personas", [])
+        # 处理personas：可能是字典列表或字符串列表
+        personas_raw = plan.get("personas", [])
+        personas = []
+        for p in personas_raw:
+            if isinstance(p, dict):
+                personas.append(p.get("persona", "用户"))
+            else:
+                personas.append(str(p))
 
         for section in plan["sections"]:
             if section["section_id"] in {"user_flows", "key_interfaces"}:
@@ -79,7 +86,7 @@ class VisionAgent(Agent):
     ) -> Dict:
         attempts = 2
         last_exc: Exception | None = None
-        for _ in range(attempts):
+        for attempt in range(attempts):
             try:
                 image_meta = self._model.generate_image(prompt)
                 image_meta.update(
@@ -91,17 +98,21 @@ class VisionAgent(Agent):
                 return image_meta
             except Exception as exc:  # noqa: BLE001
                 last_exc = exc
-                self._logger.warning(
-                    "VisionAgent 第一次生成失败，准备重试。provider=%s err=%s",
-                    getattr(self._model, "name", "unknown-model"),
-                    exc,
-                )
-        # fallback
-        self._logger.warning(
-            "VisionAgent 连续失败，使用占位。provider=%s err=%s",
-            getattr(self._model, "name", "unknown-model"),
-            last_exc,
-        )
+                if attempt < attempts - 1:
+                    self._logger.warning(
+                        "VisionAgent 第%d次生成失败，准备重试。provider=%s err=%s",
+                        attempt + 1,
+                        getattr(self._model, "name", "unknown-model"),
+                        exc,
+                    )
+                else:
+                    self._logger.warning(
+                        "VisionAgent 连续失败，使用占位。provider=%s err=%s",
+                        getattr(self._model, "name", "unknown-model"),
+                        exc,
+                    )
+        
+        # fallback: 所有重试都失败，返回占位符
         return {
             "path": None,
             "prompt": prompt,
@@ -114,7 +125,9 @@ class VisionAgent(Agent):
 
     def _build_prompt_zh(self, domain: str, section_id: str, text: str, personas: list[str]) -> str:
         key_points = self._extract_key_points_zh(text, max_points=6)
-        personas_str = "、".join(personas) if personas else "用户"
+        # 确保personas是字符串列表
+        personas_list = [str(p) for p in personas] if personas else []
+        personas_str = "、".join(personas_list) if personas_list else "用户"
         return (
             f"任务：生成高信息密度的{section_id}示意图，用于 PRD 文档插图；"
             f"领域：{domain}；主要角色：{personas_str}；"
@@ -124,7 +137,9 @@ class VisionAgent(Agent):
 
     def _build_prompt_en(self, domain: str, section_id: str, text: str, personas: list[str]) -> str:
         key_points = self._extract_key_points_en(text, max_points=6)
-        personas_str = ", ".join(personas) if personas else "users"
+        # 确保personas是字符串列表
+        personas_list = [str(p) for p in personas] if personas else []
+        personas_str = ", ".join(personas_list) if personas_list else "users"
         return (
             f"Task: Produce a high-information {section_id} visual for PRD embedding; "
             f"Domain: {domain}; Key actors: {personas_str}; "
